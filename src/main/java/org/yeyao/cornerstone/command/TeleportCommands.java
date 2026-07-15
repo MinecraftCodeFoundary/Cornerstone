@@ -10,6 +10,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
 import org.yeyao.cornerstone.Cornerstone;
+import org.yeyao.cornerstone.Config;
 import org.yeyao.cornerstone.data.StoredLocation;
 import org.yeyao.cornerstone.teleport.TeleportResult;
 
@@ -24,6 +25,7 @@ public final class TeleportCommands {
     private static boolean registered;
     private TeleportCommands() { }
     @SubscribeEvent public static void register(RegisterCommandsEvent event) {
+        if (!Config.moduleEnabled("teleport")) return;
         definitions();
         event.getDispatcher().register(Commands.literal("spawn").requires(source -> allowed(source, "spawn")).executes(context -> execute(context, "spawn", List.of())));
         event.getDispatcher().register(Commands.literal("setspawn").requires(source -> allowed(source, "setspawn"))

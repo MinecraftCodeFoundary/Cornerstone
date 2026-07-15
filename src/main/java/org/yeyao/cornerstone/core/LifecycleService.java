@@ -19,17 +19,22 @@ public final class LifecycleService {
     public void start(MinecraftServer server) {
         if (running) return;
         Path directory = server.getWorldPath(LevelResource.ROOT).resolve("cornerstone");
-        services.players().open(directory); services.teleports().open(directory); services.moderation().open(directory); services.maintenance().open(directory); services.economy().open(directory); services.audit().open(directory, logger); services.social().start(server);
+        if (Config.moduleEnabled("core")) { services.players().open(directory); services.audit().open(directory, logger); }
+        if (Config.moduleEnabled("teleport")) services.teleports().open(directory);
+        if (Config.moduleEnabled("moderation")) services.moderation().open(directory);
+        if (Config.moduleEnabled("operations")) services.maintenance().open(directory);
+        if (Config.moduleEnabled("economy")) services.economy().open(directory);
+        if (Config.moduleEnabled("social")) services.social().start(server);
         running = true; logger.info("Cornerstone core services loaded {} player profiles", services.players().snapshots().size());
     }
-    public void playerJoined(ServerPlayer player) { if (running) { services.players().markOnline(player.getUUID(), player.getGameProfile().getName(), StoredLocation.from(player)); services.economy().ensureAccount(player.getUUID()); services.social().joined(player); } }
-    public void playerLeft(ServerPlayer player) { if (running) { services.players().updateLocation(player.getUUID(), player.getGameProfile().getName(), StoredLocation.from(player)); services.moderation().playerLeft(player.getUUID()); services.social().left(player); } }
+    public void playerJoined(ServerPlayer player) { if (running) { if (Config.moduleEnabled("core")) services.players().markOnline(player.getUUID(), player.getGameProfile().getName(), StoredLocation.from(player)); if (Config.moduleEnabled("economy")) services.economy().ensureAccount(player.getUUID()); if (Config.moduleEnabled("social")) services.social().joined(player); } }
+    public void playerLeft(ServerPlayer player) { if (running) { if (Config.moduleEnabled("core")) services.players().updateLocation(player.getUUID(), player.getGameProfile().getName(), StoredLocation.from(player)); if (Config.moduleEnabled("moderation")) services.moderation().playerLeft(player.getUUID()); if (Config.moduleEnabled("social")) services.social().left(player); } }
     public void tick(MinecraftServer server) {
-        if (running) { services.teleports().tick(server, server.getTickCount()); services.social().tick(server, server.getTickCount()); services.schedules().tick(server, server.getTickCount()); }
+        if (running) { if (Config.moduleEnabled("teleport")) services.teleports().tick(server, server.getTickCount()); if (Config.moduleEnabled("social")) services.social().tick(server, server.getTickCount()); if (Config.moduleEnabled("operations")) services.schedules().tick(server, server.getTickCount()); }
         if (running && server.getTickCount() - lastSaveTick >= Config.autoSaveTicks()) { save(); lastSaveTick = server.getTickCount(); }
     }
-    public void save() { if (running) { services.players().save(); services.teleports().save(); services.moderation().save(); services.maintenance().save(); services.economy().save(); } }
-    public void stop() { if (!running) return; save(); services.moderation().clearTransient(); running = false; logger.info("Cornerstone core services saved"); }
+    public void save() { if (running) { if (Config.moduleEnabled("core")) services.players().save(); if (Config.moduleEnabled("teleport")) services.teleports().save(); if (Config.moduleEnabled("moderation")) services.moderation().save(); if (Config.moduleEnabled("operations")) services.maintenance().save(); if (Config.moduleEnabled("economy")) services.economy().save(); } }
+    public void stop() { if (!running) return; save(); if (Config.moduleEnabled("moderation")) services.moderation().clearTransient(); running = false; logger.info("Cornerstone core services saved"); }
     public boolean isRunning() { return running; }
-    public void playerDied(ServerPlayer player) { if (running) services.teleports().recordDeath(player); }
+    public void playerDied(ServerPlayer player) { if (running && Config.moduleEnabled("teleport")) services.teleports().recordDeath(player); }
 }

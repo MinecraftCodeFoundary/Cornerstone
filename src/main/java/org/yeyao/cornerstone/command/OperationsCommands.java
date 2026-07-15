@@ -11,6 +11,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
 import org.yeyao.cornerstone.Cornerstone;
+import org.yeyao.cornerstone.Config;
 import org.yeyao.cornerstone.operations.ServerScheduleService;
 
 import java.time.Duration;
@@ -25,6 +26,7 @@ public final class OperationsCommands {
     private static boolean registered;
     private OperationsCommands() { }
     @SubscribeEvent public static void register(RegisterCommandsEvent event) {
+        if (!Config.moduleEnabled("operations")) return;
         definitions();
         event.getDispatcher().register(Commands.literal("maintenance").requires(source -> allowed(source, "maintenance"))
                 .executes(context -> execute(context, "maintenance", List.of("status")))
@@ -39,14 +41,17 @@ public final class OperationsCommands {
         event.getDispatcher().register(onlineTarget("clear"));
         event.getDispatcher().register(onlineTarget("heal"));
         event.getDispatcher().register(onlineTarget("feed"));
-        event.getDispatcher().register(Commands.literal("gamemode").requires(source -> allowed(source, "gamemode"))
-                .then(Commands.argument("mode", StringArgumentType.word()).then(Commands.argument("player", StringArgumentType.word()).executes(context -> execute(context, "gamemode", List.of(StringArgumentType.getString(context, "mode"), StringArgumentType.getString(context, "player")))))));
+        CommandAliasRegistrar.register(event, "gamemode", OperationsCommands::gameModeCommand);
     }
     private static com.mojang.brigadier.builder.LiteralArgumentBuilder<CommandSourceStack> scheduleCommand(String id, ServerScheduleService.OperationType type) {
         return Commands.literal(id).requires(source -> allowed(source, id)).then(Commands.argument("duration", StringArgumentType.word()).executes(context -> execute(context, id, List.of(StringArgumentType.getString(context, "duration")))));
     }
     private static com.mojang.brigadier.builder.LiteralArgumentBuilder<CommandSourceStack> onlineTarget(String id) {
         return Commands.literal(id).requires(source -> allowed(source, id)).then(Commands.argument("player", StringArgumentType.word()).executes(context -> execute(context, id, List.of(StringArgumentType.getString(context, "player")))));
+    }
+    private static com.mojang.brigadier.builder.LiteralArgumentBuilder<CommandSourceStack> gameModeCommand(String literal) {
+        return Commands.literal(literal).requires(source -> allowed(source, "gamemode"))
+                .then(Commands.argument("mode", StringArgumentType.word()).then(Commands.argument("player", StringArgumentType.word()).executes(context -> execute(context, "gamemode", List.of(StringArgumentType.getString(context, "mode"), StringArgumentType.getString(context, "player"))))));
     }
     private static synchronized void definitions() {
         if (registered) return;

@@ -32,3 +32,17 @@
 | `/gamemode <mode> <player>` | `cornerstone.command.gamemode` | 设置模式：`survival`、`creative`、`adventure`、`spectator`。 |
 
 `/invsee` 与 `/endersee` 的槽位同时禁止放入、取出和 shift 快速移动，直接展示目标容器而不复制或重写其中的模组物品、数据组件或容器数据。`/clear` 是唯一会有意删除背包内容的工具命令，所有这些操作都写入审计日志。
+
+## 命令缩略名
+
+`commands.aliases` 可配置已支持命令的缩略名，格式为 `原命令=别名1,别名2`。目前支持 `gamemode`，默认配置为：
+
+```json
+{
+  "commands": {
+    "aliases": ["gamemode=gm"]
+  }
+}
+```
+
+因此 `/gm creative Steve` 与 `/gamemode creative Steve` 使用完全相同的 LuckPerms 节点、参数校验和审计记录。修改后重启服务器使命令树重新注册。

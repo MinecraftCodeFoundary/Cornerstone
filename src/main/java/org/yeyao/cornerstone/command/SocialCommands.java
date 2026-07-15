@@ -10,6 +10,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
 import org.yeyao.cornerstone.Cornerstone;
+import org.yeyao.cornerstone.Config;
 
 import java.time.Duration;
 import java.util.List;
@@ -21,6 +22,7 @@ public final class SocialCommands {
     private static boolean registered;
     private SocialCommands() { }
     @SubscribeEvent public static void register(RegisterCommandsEvent event) {
+        if (!Config.moduleEnabled("social")) return;
         definitions();
         event.getDispatcher().register(Commands.literal("msg").requires(source -> allowed(source, "msg"))
                 .then(Commands.argument("player", StringArgumentType.word())

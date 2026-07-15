@@ -18,7 +18,7 @@
 
 ## 配置
 
-配置文件为 `<服务器目录>/config/cornerstone-common.toml`。
+配置文件为 `<服务器目录>/config/cornerstone.json`。
 
 | 配置项 | 默认值 | 作用 |
 | --- | --- | --- |

@@ -8,6 +8,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
 import org.yeyao.cornerstone.Cornerstone;
+import org.yeyao.cornerstone.Config;
 
 import java.time.Duration;
 import java.util.List;
@@ -18,6 +19,7 @@ public final class CornerstoneCommands {
     private static boolean registered;
     private CornerstoneCommands() { }
     @SubscribeEvent public static void register(RegisterCommandsEvent event) {
+        if (!Config.moduleEnabled("core")) return;
         registerDefinitions();
         event.getDispatcher().register(Commands.literal("cornerstone")
                 .then(Commands.literal("status").requires(source -> Cornerstone.services().commands().canExecute(source, "cornerstone.status")).executes(context -> execute(context, "cornerstone.status")))

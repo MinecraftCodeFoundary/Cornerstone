@@ -12,6 +12,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
 import org.yeyao.cornerstone.Cornerstone;
+import org.yeyao.cornerstone.Config;
 import org.yeyao.cornerstone.economy.EconomyTransferResult;
 import org.yeyao.cornerstone.economy.TransactionRecord;
 
@@ -30,6 +31,7 @@ public final class EconomyCommands {
     private static boolean registered;
     private EconomyCommands() { }
     @SubscribeEvent public static void register(RegisterCommandsEvent event) {
+        if (!Config.moduleEnabled("economy")) return;
         definitions();
         event.getDispatcher().register(Commands.literal("balance").requires(source -> allowed(source, "balance")).executes(context -> execute(context, "balance", List.of())));
         event.getDispatcher().register(Commands.literal("pay").requires(source -> allowed(source, "pay"))

@@ -159,6 +159,7 @@ Cornerstone 是一个面向 NeoForge 服务器的基础设施 Mod，定位类似
 - [x] `/restart <duration>`、`/shutdown <duration>` 与 `/cancelshutdown`：单一、可取消的倒计时任务和分级广播通知。
 - [x] `/invsee`、`/endersee`：只读菜单拒绝取放和快捷移动，不修改目标容器内含数据组件的物品。
 - [x] `/clear`、`/heal`、`/feed`、`/gamemode`，各自有独立 LuckPerms 命令节点并写入审计。
+- [x] `commands.aliases` 支持为 `gamemode` 配置缩略名，默认 `/gm` 与原命令共享权限、参数校验和审计。
 - [x] 维护状态与允许列表即时落盘；计划任务不会在重启后意外恢复。
 - [x] `./gradlew.bat build --no-daemon` 完整构建通过。
 
@@ -221,3 +222,12 @@ Cornerstone 本体不实现服务器商店、拍卖行或复杂货币玩法。
 ## 范围控制
 
 在 `1.0.0` 前不优先开发领地、反作弊、商店、拍卖、任务、RPG 属性、菜单 GUI 或大型活动玩法。它们应作为独立 Mod，或通过 Cornerstone API 实现，以保持核心模块稳定、兼容且便于维护。
+
+## 配置与模块化更新（`0.7.1`，2026-07-15）
+
+- [x] 服务端配置迁移为 `config/cornerstone.json`；默认文件以 `_comment` 字段提供中文说明。
+- [x] `core`、`teleport`、`warps`、`social`、`moderation`、`operations` 与 `economy` 均可在 `modules` 中独立开关。
+- [x] 已关闭模块不注册命令、不加载对应存档，也不执行相关事件处理或定时任务；`warps` 依赖 `teleport`，所有功能模块依赖 `core`。
+- [x] 模块化配置说明与 JSON 命令缩略名示例已补充；旧版 `cornerstone-common.toml` 不再读取。
+- [x] 已新增面向服主、管理员与玩家的中文 Mod 使用手册，覆盖安装、权限、配置、命令与排错。
+- [x] 使用手册已补充逐条命令与 LuckPerms 权限节点对照表，包含地标访问和维护模式绕过权限。

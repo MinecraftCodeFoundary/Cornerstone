@@ -11,6 +11,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
 import org.yeyao.cornerstone.Cornerstone;
+import org.yeyao.cornerstone.Config;
 import org.yeyao.cornerstone.moderation.Punishment;
 import org.yeyao.cornerstone.moderation.PunishmentType;
 
@@ -29,6 +30,7 @@ public final class ModerationCommands {
     private static boolean registered;
     private ModerationCommands() { }
     @SubscribeEvent public static void register(RegisterCommandsEvent event) {
+        if (!Config.moduleEnabled("moderation")) return;
         definitions();
         event.getDispatcher().register(withTarget("kick", event, true));
         event.getDispatcher().register(withTarget("ban", event, true));
