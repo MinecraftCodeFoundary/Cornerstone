@@ -1,5 +1,4 @@
 {
-  "itemGroup.cornerstone": "Example Mod Tab",
-  "block.cornerstone.example_block": "Example Block",
-  "item.cornerstone.example_item": "Example Item"
+  "cornerstone.command.status": "Cornerstone service status",
+  "cornerstone.command.save": "Save Cornerstone data"
 }
