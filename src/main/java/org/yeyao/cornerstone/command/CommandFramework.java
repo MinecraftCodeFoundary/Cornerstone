@@ -41,7 +41,22 @@ public final class CommandFramework {
     }
     private CommandResult audited(CommandSourceStack source, String id, List<String> arguments, CommandResult result) {
         String actor = source.getTextName(); UUID actorId = source.getEntity() == null ? null : source.getEntity().getUUID();
-        audit.record(new AuditRecord(Instant.now(), "command." + id, actor, Optional.ofNullable(actorId), "", source.getLevel().dimension().location().toString(), String.join(" ", arguments), result.success(), result.message()));
+        audit.record(new AuditRecord(Instant.now(), "command." + id, actor, Optional.ofNullable(actorId), auditTarget(id, arguments), source.getLevel().dimension().location().toString(), auditArguments(id, arguments), result.success(), result.message()));
         return result;
+    }
+    private static String auditArguments(String id, List<String> arguments) {
+        if (id.equals("social.msg")) return arguments.isEmpty() ? "<redacted>" : arguments.getFirst() + " <redacted>";
+        if (id.equals("social.reply")) return "<redacted>";
+        return String.join(" ", arguments);
+    }
+    private static String auditTarget(String id, List<String> arguments) {
+        if ((id.startsWith("moderation.") || id.equals("social.msg")) && !arguments.isEmpty()) return arguments.getFirst();
+        if (id.startsWith("operations.")) {
+            if (id.equals("operations.gamemode") && arguments.size() > 1) return arguments.get(1);
+            if (id.equals("operations.maintenance") && arguments.size() > 1 && arguments.getFirst().equals("allow")) return arguments.get(1);
+            if (!arguments.isEmpty() && !id.equals("operations.maintenance") && !id.equals("operations.restart") && !id.equals("operations.shutdown")) return arguments.getFirst();
+        }
+        if ((id.equals("pay") || id.equals("economy.history")) && !arguments.isEmpty()) return arguments.getFirst();
+        return "";
     }
 }
