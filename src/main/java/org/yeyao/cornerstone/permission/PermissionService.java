@@ -10,12 +10,13 @@ import java.util.UUID;
 
 /**
  * The sole authorization boundary for Cornerstone commands.
- * LuckPerms is mandatory; no vanilla OP-level fallback is deliberately provided.
+ * LuckPerms is mandatory. Vanilla level-4 operators are granted every Cornerstone node by default.
  */
 public final class PermissionService {
     public boolean has(CommandSourceStack source, String node) {
         if (source == null || node == null || !node.matches("[a-z0-9_.-]{1,128}")) return false;
         if (source.getEntity() == null) return true; // Dedicated console and RCON are server operators.
+        if (source.hasPermission(4)) return true;
         if (!(source.getEntity() instanceof ServerPlayer player)) return false;
         try {
             LuckPerms luckPerms = LuckPermsProvider.get();

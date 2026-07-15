@@ -53,7 +53,7 @@ Cornerstone 是一个面向 NeoForge 服务器的基础设施 Mod，定位类似
 
 - [x] 以 UUID 为主键的玩家资料中心，保存最后在线时间、最后位置与受校验的模块数据。
 - [x] 带格式版本、CRC32 校验、原子替换、`.bak` 恢复和迁移接口的持久化存储。
-- [x] LuckPerms `5.4+` 必需前置与缓存权限数据授权；不回退至原版 OP 等级。
+- [x] LuckPerms `5.4+` 必需前置与缓存权限数据授权；原版 OP 等级 4 默认拥有全部 Cornerstone 权限。
 - [x] 统一命令框架；`/cornerstone status`、`/cornerstone save` 已接入权限、执行结果和审计。
 - [x] 记录执行者、目标、时间、维度、参数摘要和结果的审计服务。
 - [x] `CornerstoneApi`、玩家资料变更事件、中英文语言文件和 M1 使用文档。

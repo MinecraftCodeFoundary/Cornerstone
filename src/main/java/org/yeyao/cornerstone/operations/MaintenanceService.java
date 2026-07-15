@@ -20,7 +20,7 @@ public final class MaintenanceService {
     public boolean enabled() { return data.maintenanceEnabled; }
     public void setEnabled(boolean enabled) { data.maintenanceEnabled = enabled; save(); }
     public boolean toggleAllowlist(UUID player) { boolean allowed = data.maintenanceAllowlist.remove(player) ? false : data.maintenanceAllowlist.add(player); save(); return allowed; }
-    public boolean canJoin(ServerPlayer player) { return !data.maintenanceEnabled || data.maintenanceAllowlist.contains(player.getUUID()) || permissions.has(player.getUUID(), BYPASS_PERMISSION); }
+    public boolean canJoin(ServerPlayer player) { return !data.maintenanceEnabled || player.hasPermissions(4) || data.maintenanceAllowlist.contains(player.getUUID()) || permissions.has(player.getUUID(), BYPASS_PERMISSION); }
     public boolean disconnectIfBlocked(ServerPlayer player) {
         if (canJoin(player)) return false;
         player.connection.disconnect(Component.literal("The server is currently in maintenance mode.")); return true;

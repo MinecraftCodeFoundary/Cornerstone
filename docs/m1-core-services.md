@@ -20,7 +20,7 @@ Cornerstone 的 M1 是后续功能的服务端基础层。功能模块应通过 
 
 ## 权限与命令
 
-LuckPerms `5.4+` 是 Cornerstone 的必需服务端前置。每个命令只声明一个 LuckPerms 权限节点；玩家权限由 LuckPerms 的缓存权限数据判定，不回退到原版 OP 等级。非玩家命令源（包括控制台与 RCON）由服务器视为受信任的操作源。
+LuckPerms `5.4+` 是 Cornerstone 的必需服务端前置。每个命令只声明一个 LuckPerms 权限节点；普通玩家权限由 LuckPerms 的缓存权限数据判定。原版 OP 等级 4 的玩家默认拥有全部 Cornerstone 权限，非玩家命令源（包括控制台与 RCON）也视为受信任的操作源。
 
 | 命令 | LuckPerms 权限节点 |
 | --- | --- |
