@@ -92,6 +92,7 @@ sourceSets.main.resources { srcDir 'src/generated/resources' }
 
 
 dependencies {
+    implementation 'org.yeyao:codefoundryapi:2.0.0'
     // LuckPerms is a required server dependency. Its implementation is supplied by the installed mod.
     compileOnly "net.luckperms:api:5.4"
     // Example mod dependency with JEI
