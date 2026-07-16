@@ -1,6 +1,6 @@
 # Cornerstone Mod 使用手册
 
-适用于 Cornerstone `0.7.1`、Minecraft `1.21.1` 与 NeoForge `21.1.235`。Cornerstone 是服务端基础设施 Mod，提供传送、地标、社交、管理、运维和经济功能。
+适用于 Cornerstone `0.8.0`、Minecraft `1.21.1` 与 NeoForge `21.1.235`。Cornerstone 是服务端基础设施 Mod，提供传送、地标、社交、管理、运维和经济功能。
 
 ## 1. 安装与首次启动
 
