@@ -34,14 +34,14 @@ public final class TeleportCommands {
                 .then(Commands.literal("dimension").executes(context -> execute(context, "setspawn", List.of("dimension")))));
         event.getDispatcher().register(Commands.literal("home").requires(source -> allowed(source, "home"))
                 .executes(context -> execute(context, "home", List.of("home")))
-                .then(Commands.argument("name", StringArgumentType.word()).executes(context -> execute(context, "home", List.of(StringArgumentType.getString(context, "name"))))));
+                .then(Commands.argument("name", StringArgumentType.word()).suggests(CommandSuggestions::homes).executes(context -> execute(context, "home", List.of(StringArgumentType.getString(context, "name"))))));
         event.getDispatcher().register(Commands.literal("sethome").requires(source -> allowed(source, "sethome"))
                 .executes(context -> execute(context, "sethome", List.of("home")))
                 .then(Commands.argument("name", StringArgumentType.word()).executes(context -> execute(context, "sethome", List.of(StringArgumentType.getString(context, "name"))))));
         event.getDispatcher().register(Commands.literal("delhome").requires(source -> allowed(source, "delhome"))
-                .then(Commands.argument("name", StringArgumentType.word()).executes(context -> execute(context, "delhome", List.of(StringArgumentType.getString(context, "name"))))));
+                .then(Commands.argument("name", StringArgumentType.word()).suggests(CommandSuggestions::homes).executes(context -> execute(context, "delhome", List.of(StringArgumentType.getString(context, "name"))))));
         event.getDispatcher().register(Commands.literal("tpa").requires(source -> allowed(source, "tpa"))
-                .then(Commands.argument("player", StringArgumentType.word()).executes(context -> execute(context, "tpa", List.of(StringArgumentType.getString(context, "player"))))));
+                .then(Commands.argument("player", StringArgumentType.word()).suggests(CommandSuggestions::onlinePlayers).executes(context -> execute(context, "tpa", List.of(StringArgumentType.getString(context, "player"))))));
         event.getDispatcher().register(Commands.literal("tpaccept").requires(source -> allowed(source, "tpaccept")).executes(context -> execute(context, "tpaccept", List.of())));
         event.getDispatcher().register(Commands.literal("tpdeny").requires(source -> allowed(source, "tpdeny")).executes(context -> execute(context, "tpdeny", List.of())));
         event.getDispatcher().register(Commands.literal("tpacancel").requires(source -> allowed(source, "tpacancel")).executes(context -> execute(context, "tpacancel", List.of())));

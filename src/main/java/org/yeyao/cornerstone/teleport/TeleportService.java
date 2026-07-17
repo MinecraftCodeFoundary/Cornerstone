@@ -38,6 +38,7 @@ public final class TeleportService {
     public void setDimensionSpawn(StoredLocation location) { data.dimensionSpawns.put(location.dimension(), location); }
     public Optional<StoredLocation> spawnFor(String dimension) { return Optional.ofNullable(data.dimensionSpawns.getOrDefault(dimension, data.globalSpawn)); }
     public Optional<StoredLocation> home(UUID player, String name) { return Optional.ofNullable(data.homes.getOrDefault(player, Map.of()).get(normalizeHome(name))); }
+    public List<String> homeNames(UUID player) { return data.homes.getOrDefault(player, Map.of()).keySet().stream().sorted().toList(); }
     public TeleportResult setHome(ServerPlayer player, String name) {
         String normalized = normalizeHome(name); Map<String, StoredLocation> homes = data.homes.computeIfAbsent(player.getUUID(), ignored -> new LinkedHashMap<>());
         if (!homes.containsKey(normalized) && homes.size() >= Config.maxHomes()) return TeleportResult.fail("You have reached the home limit of " + Config.maxHomes() + ".");
@@ -49,6 +50,7 @@ public final class TeleportService {
         if (homes.isEmpty()) data.homes.remove(player); return TeleportResult.ok("Home '" + normalized + "' deleted.");
     }
     public Optional<Warp> warp(String name) { return Optional.ofNullable(data.warps.get(normalizeWarp(name))); }
+    public List<Warp> warps() { return data.warps.values().stream().sorted(Comparator.comparing(Warp::name)).toList(); }
     public TeleportResult setWarp(ServerPlayer player, String name, Warp.Access access) {
         String normalized = normalizeWarp(name); data.warps.put(normalized, new Warp(normalized, StoredLocation.from(player), access));
         return TeleportResult.ok("Warp '" + normalized + "' saved as " + access.name().toLowerCase(Locale.ROOT) + ".");

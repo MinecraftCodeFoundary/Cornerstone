@@ -25,7 +25,7 @@ public final class SocialCommands {
         if (!Config.moduleEnabled("social")) return;
         definitions();
         event.getDispatcher().register(Commands.literal("msg").requires(source -> allowed(source, "msg"))
-                .then(Commands.argument("player", StringArgumentType.word())
+                .then(Commands.argument("player", StringArgumentType.word()).suggests(CommandSuggestions::onlinePlayers)
                         .then(Commands.argument("message", StringArgumentType.greedyString())
                                 .executes(context -> execute(context, "msg", List.of(
                                         StringArgumentType.getString(context, "player"),
@@ -33,12 +33,12 @@ public final class SocialCommands {
         event.getDispatcher().register(Commands.literal("reply").requires(source -> allowed(source, "reply"))
                 .then(Commands.argument("message", StringArgumentType.greedyString()).executes(context -> execute(context, "reply", List.of(StringArgumentType.getString(context, "message"))))));
         event.getDispatcher().register(Commands.literal("ignore").requires(source -> allowed(source, "ignore"))
-                .then(Commands.argument("player", StringArgumentType.word()).executes(context -> execute(context, "ignore", List.of(StringArgumentType.getString(context, "player"))))));
+                .then(Commands.argument("player", StringArgumentType.word()).suggests(CommandSuggestions::onlinePlayers).executes(context -> execute(context, "ignore", List.of(StringArgumentType.getString(context, "player"))))));
         event.getDispatcher().register(Commands.literal("afk").requires(source -> allowed(source, "afk"))
                 .executes(context -> execute(context, "afk", List.of("")))
                 .then(Commands.argument("reason", StringArgumentType.greedyString()).executes(context -> execute(context, "afk", List.of(StringArgumentType.getString(context, "reason"))))));
         event.getDispatcher().register(Commands.literal("seen").requires(source -> allowed(source, "seen"))
-                .then(Commands.argument("player", StringArgumentType.word()).executes(context -> execute(context, "seen", List.of(StringArgumentType.getString(context, "player"))))));
+                .then(Commands.argument("player", StringArgumentType.word()).suggests(CommandSuggestions::players).executes(context -> execute(context, "seen", List.of(StringArgumentType.getString(context, "player"))))));
         event.getDispatcher().register(Commands.literal("list").requires(source -> allowed(source, "list")).executes(context -> execute(context, "list", List.of())));
         event.getDispatcher().register(Commands.literal("rules").requires(source -> allowed(source, "rules")).executes(context -> execute(context, "rules", List.of())));
     }

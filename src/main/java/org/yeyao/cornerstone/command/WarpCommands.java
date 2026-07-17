@@ -28,12 +28,12 @@ public final class WarpCommands {
         if (!Config.moduleEnabled("warps")) return;
         definitions();
         event.getDispatcher().register(Commands.literal("warp").requires(source -> allowed(source, "warp"))
-                .then(Commands.argument("name", StringArgumentType.word()).executes(context -> execute(context, "warp", List.of(StringArgumentType.getString(context, "name"))))));
+                .then(Commands.argument("name", StringArgumentType.word()).suggests(CommandSuggestions::warps).executes(context -> execute(context, "warp", List.of(StringArgumentType.getString(context, "name"))))));
         event.getDispatcher().register(Commands.literal("setwarp").requires(source -> allowed(source, "setwarp"))
                 .then(Commands.argument("name", StringArgumentType.word()).executes(context -> execute(context, "setwarp", List.of(StringArgumentType.getString(context, "name"), "public")))
-                        .then(Commands.argument("access", StringArgumentType.word()).executes(context -> execute(context, "setwarp", List.of(StringArgumentType.getString(context, "name"), StringArgumentType.getString(context, "access")))))));
+                        .then(Commands.argument("access", StringArgumentType.word()).suggests(CommandSuggestions::warpAccess).executes(context -> execute(context, "setwarp", List.of(StringArgumentType.getString(context, "name"), StringArgumentType.getString(context, "access")))))));
         event.getDispatcher().register(Commands.literal("delwarp").requires(source -> allowed(source, "delwarp"))
-                .then(Commands.argument("name", StringArgumentType.word()).executes(context -> execute(context, "delwarp", List.of(StringArgumentType.getString(context, "name"))))));
+                .then(Commands.argument("name", StringArgumentType.word()).suggests(CommandSuggestions::warps).executes(context -> execute(context, "delwarp", List.of(StringArgumentType.getString(context, "name"))))));
         event.getDispatcher().register(Commands.literal("rtp").requires(source -> allowed(source, "rtp")).executes(context -> execute(context, "rtp", List.of())));
     }
     private static synchronized void definitions() {

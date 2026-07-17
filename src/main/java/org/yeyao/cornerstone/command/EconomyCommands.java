@@ -35,13 +35,13 @@ public final class EconomyCommands {
         definitions();
         event.getDispatcher().register(Commands.literal("balance").requires(source -> allowed(source, "balance")).executes(context -> execute(context, "balance", List.of())));
         event.getDispatcher().register(Commands.literal("pay").requires(source -> allowed(source, "pay"))
-                .then(Commands.argument("player", StringArgumentType.word())
+                .then(Commands.argument("player", StringArgumentType.word()).suggests(CommandSuggestions::players)
                         .then(Commands.argument("amount", StringArgumentType.word())
                                 .executes(context -> execute(context, "pay", List.of(
                                         StringArgumentType.getString(context, "player"),
                                         StringArgumentType.getString(context, "amount")))))));
         event.getDispatcher().register(Commands.literal("economy")
-                .then(Commands.literal("history").requires(source -> allowed(source, "economy.history")).then(Commands.argument("player", StringArgumentType.word()).executes(context -> execute(context, "economy.history", List.of(StringArgumentType.getString(context, "player"))))))
+                .then(Commands.literal("history").requires(source -> allowed(source, "economy.history")).then(Commands.argument("player", StringArgumentType.word()).suggests(CommandSuggestions::players).executes(context -> execute(context, "economy.history", List.of(StringArgumentType.getString(context, "player"))))))
                 .then(Commands.literal("export").requires(source -> allowed(source, "economy.export")).executes(context -> execute(context, "economy.export", List.of()))));
     }
     private static synchronized void definitions() {

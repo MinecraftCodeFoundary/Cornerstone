@@ -32,7 +32,7 @@ public final class OperationsCommands {
                 .executes(context -> execute(context, "maintenance", List.of("status")))
                 .then(Commands.literal("on").executes(context -> execute(context, "maintenance", List.of("on"))))
                 .then(Commands.literal("off").executes(context -> execute(context, "maintenance", List.of("off"))))
-                .then(Commands.literal("allow").then(Commands.argument("player", StringArgumentType.word()).executes(context -> execute(context, "maintenance", List.of("allow", StringArgumentType.getString(context, "player")))))));
+                .then(Commands.literal("allow").then(Commands.argument("player", StringArgumentType.word()).suggests(CommandSuggestions::players).executes(context -> execute(context, "maintenance", List.of("allow", StringArgumentType.getString(context, "player")))))));
         event.getDispatcher().register(scheduleCommand("restart", ServerScheduleService.OperationType.RESTART));
         event.getDispatcher().register(scheduleCommand("shutdown", ServerScheduleService.OperationType.SHUTDOWN));
         event.getDispatcher().register(Commands.literal("cancelshutdown").requires(source -> allowed(source, "cancelshutdown")).executes(context -> execute(context, "cancelshutdown", List.of())));
@@ -44,14 +44,14 @@ public final class OperationsCommands {
         CommandAliasRegistrar.register(event, "gamemode", OperationsCommands::gameModeCommand);
     }
     private static com.mojang.brigadier.builder.LiteralArgumentBuilder<CommandSourceStack> scheduleCommand(String id, ServerScheduleService.OperationType type) {
-        return Commands.literal(id).requires(source -> allowed(source, id)).then(Commands.argument("duration", StringArgumentType.word()).executes(context -> execute(context, id, List.of(StringArgumentType.getString(context, "duration")))));
+        return Commands.literal(id).requires(source -> allowed(source, id)).then(Commands.argument("duration", StringArgumentType.word()).suggests(CommandSuggestions::durations).executes(context -> execute(context, id, List.of(StringArgumentType.getString(context, "duration")))));
     }
     private static com.mojang.brigadier.builder.LiteralArgumentBuilder<CommandSourceStack> onlineTarget(String id) {
-        return Commands.literal(id).requires(source -> allowed(source, id)).then(Commands.argument("player", StringArgumentType.word()).executes(context -> execute(context, id, List.of(StringArgumentType.getString(context, "player")))));
+        return Commands.literal(id).requires(source -> allowed(source, id)).then(Commands.argument("player", StringArgumentType.word()).suggests(CommandSuggestions::onlinePlayers).executes(context -> execute(context, id, List.of(StringArgumentType.getString(context, "player")))));
     }
     private static com.mojang.brigadier.builder.LiteralArgumentBuilder<CommandSourceStack> gameModeCommand(String literal) {
         return Commands.literal(literal).requires(source -> allowed(source, "gamemode"))
-                .then(Commands.argument("mode", StringArgumentType.word()).then(Commands.argument("player", StringArgumentType.word()).executes(context -> execute(context, "gamemode", List.of(StringArgumentType.getString(context, "mode"), StringArgumentType.getString(context, "player"))))));
+                .then(Commands.argument("mode", StringArgumentType.word()).suggests(CommandSuggestions::gameModes).then(Commands.argument("player", StringArgumentType.word()).suggests(CommandSuggestions::onlinePlayers).executes(context -> execute(context, "gamemode", List.of(StringArgumentType.getString(context, "mode"), StringArgumentType.getString(context, "player"))))));
     }
     private static synchronized void definitions() {
         if (registered) return;

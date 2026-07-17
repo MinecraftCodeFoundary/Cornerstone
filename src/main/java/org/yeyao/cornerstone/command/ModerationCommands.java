@@ -43,21 +43,21 @@ public final class ModerationCommands {
         event.getDispatcher().register(singleTarget("history", event));
         event.getDispatcher().register(Commands.literal("vanish").requires(source -> allowed(source, "vanish")).executes(context -> execute(context, "vanish", List.of())));
         event.getDispatcher().register(Commands.literal("freeze").requires(source -> allowed(source, "freeze"))
-                .then(Commands.argument("player", StringArgumentType.word()).executes(context -> execute(context, "freeze", List.of(StringArgumentType.getString(context, "player"))))));
+                .then(Commands.argument("player", StringArgumentType.word()).suggests(CommandSuggestions::onlinePlayers).executes(context -> execute(context, "freeze", List.of(StringArgumentType.getString(context, "player"))))));
     }
     private static com.mojang.brigadier.builder.LiteralArgumentBuilder<CommandSourceStack> withTarget(String id, RegisterCommandsEvent ignored, boolean reason) {
         var root = Commands.literal(id).requires(source -> allowed(source, id));
-        var target = Commands.argument("player", StringArgumentType.word()).executes(context -> execute(context, id, List.of(StringArgumentType.getString(context, "player"), "No reason provided.")));
+        var target = Commands.argument("player", StringArgumentType.word()).suggests(CommandSuggestions::players).executes(context -> execute(context, id, List.of(StringArgumentType.getString(context, "player"), "No reason provided.")));
         if (reason) target.then(Commands.argument("reason", StringArgumentType.greedyString()).executes(context -> execute(context, id, List.of(StringArgumentType.getString(context, "player"), StringArgumentType.getString(context, "reason")))));
         return root.then(target);
     }
     private static com.mojang.brigadier.builder.LiteralArgumentBuilder<CommandSourceStack> withTempTarget(String id, RegisterCommandsEvent ignored) {
-        return Commands.literal(id).requires(source -> allowed(source, id)).then(Commands.argument("player", StringArgumentType.word())
-                .then(Commands.argument("duration", StringArgumentType.word()).executes(context -> execute(context, id, List.of(StringArgumentType.getString(context, "player"), StringArgumentType.getString(context, "duration"), "No reason provided.")))
+        return Commands.literal(id).requires(source -> allowed(source, id)).then(Commands.argument("player", StringArgumentType.word()).suggests(CommandSuggestions::players)
+                .then(Commands.argument("duration", StringArgumentType.word()).suggests(CommandSuggestions::durations).executes(context -> execute(context, id, List.of(StringArgumentType.getString(context, "player"), StringArgumentType.getString(context, "duration"), "No reason provided.")))
                         .then(Commands.argument("reason", StringArgumentType.greedyString()).executes(context -> execute(context, id, List.of(StringArgumentType.getString(context, "player"), StringArgumentType.getString(context, "duration"), StringArgumentType.getString(context, "reason")))))));
     }
     private static com.mojang.brigadier.builder.LiteralArgumentBuilder<CommandSourceStack> singleTarget(String id, RegisterCommandsEvent ignored) {
-        return Commands.literal(id).requires(source -> allowed(source, id)).then(Commands.argument("player", StringArgumentType.word()).executes(context -> execute(context, id, List.of(StringArgumentType.getString(context, "player")))));
+        return Commands.literal(id).requires(source -> allowed(source, id)).then(Commands.argument("player", StringArgumentType.word()).suggests(CommandSuggestions::players).executes(context -> execute(context, id, List.of(StringArgumentType.getString(context, "player")))));
     }
     private static synchronized void definitions() {
         if (registered) return;
